@@ -32,7 +32,7 @@ const getParamsFromLink = (link, params_prefix) => {
 	return null;
 };
 
-(async () => {
+const getLinks = async () => {
 	const kutt = new Kutt();
 	const health = kutt.health();
 	const isHealthy = await health.check();
@@ -44,29 +44,41 @@ const getParamsFromLink = (link, params_prefix) => {
 			.links()
 			.list({ all: true, limit: 100, skip: 0 });
 
-		let finalResult = linksResponse.data
-			.filter(e =>
-				targeted_domain === "*" ? true : e.target.includes(targeted_domain)
-			)
-			.map(e => {
-				return {
-					short_url: e.link,
-					target_url: e.target,
-					target_canonical_url: e.target.split("?")[0],
-					visit_count: e.visit_count,
-					[targeted_domain_params_prefix === "*"
-						? "params"
-						: targeted_domain_params_prefix]: getParamsFromLink(
-						e.target,
-						targeted_domain_params_prefix
-					),
-				};
-			})
-			.sort((x, y) => y.visit_count - x.visit_count);
+		if (linksResponse != null && linksResponse.data.length > 0) {
+			return linksResponse.data
+				.filter(e =>
+					targeted_domain === "*" ? true : e.target.includes(targeted_domain)
+				)
+				.map(e => {
+					return {
+						target_url: e.target,
+						target_short_url: e.link,
+						target_canonical_url: e.target.split("?")[0],
+						visit_count: e.visit_count,
+						[targeted_domain_params_prefix === "*"
+							? "params"
+							: targeted_domain_params_prefix]: getParamsFromLink(
+							e.target,
+							targeted_domain_params_prefix
+						),
+					};
+				})
+				.sort((x, y) => y.visit_count - x.visit_count);
+		} else return null;
+	} else {
+		console.log("API is not healthy, aborted");
+		return null;
+	}
+};
 
-		console.log({
-			links: finalResult,
-			links_count: finalResult.length,
-		});
-	} else console.log("API is not healthy, aborted");
+const handleLinksStats = links => {
+	console.log({
+		links,
+		links_count: links.length,
+	});
+};
+
+(async () => {
+	const links = await getLinks();
+	handleLinksStats(links);
 })();
