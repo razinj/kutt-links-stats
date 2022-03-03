@@ -1,16 +1,16 @@
 {
-	"name": "kutt_links_stats",
-	"version": "1.0.0",
-	"description": "Get Kutt links stats for specific domain and/or query params",
-	"main": "app.js",
-	"scripts": {
-		"start": "node app.js"
-	},
-	"author": "RAZINJ",
-	"license": "ISC",
-	"dependencies": {
-		"axios": "^0.24.0",
-		"dotenv": "^10.0.0",
-		"kutt": "^2.0.0"
-	}
+  "name": "kutt_links_stats",
+  "version": "1.0.0",
+  "description": "Get Kutt links stats for specific domain and query params",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "RAZINJ",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "dotenv": "^16.0.0",
+    "kutt": "^2.0.0"
+  }
 }
